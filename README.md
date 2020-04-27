@@ -35,14 +35,14 @@ I used [Express], a [Node.js] web aplication framework, to develop the server.
 
 [Mongo DB] to store the data.
 
-[Bootstrap] to decorate the Front-End
+[Bootstrap] to decorate the Front-End.
 
 [Express]: https://expressjs.com/
 [Node.js]: https://nodejs.org/
 [Mongo DB]: https://www.mongodb.com/
 [Bootstrap]: https://getbootstrap.com/
 
-In the Front-End to 
+
 ## Help to install the packages
 ```npm install```
 
