@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    
+
+    <title>Calculator</title>
+  </head>
+  <body>
+    <nav class="nav justify-content-center">
+      <a class="nav-link active " href="#">Calculator</a>
+    </nav>
+
+
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+         
+          <form id="form">
+            <div class="form-group">
+              <label for="operation">Write an operation </label>
+              <!-- <input type="text" class="form-control" id="operationInput" placeholder="Example: 2+2" pattern="[0-9]*( ){0,}([+-/*]( ){0,}[0-9]*( ){0,})*"> -->
+              <input type="text" class="form-control" id="operationInput" placeholder="Example: 2+2" pattern="[0-9()+-/*]*">
+              
+              <h3> </h3>
+              
+              <button type="button" class="btn btn-success" id="solveReq">Solve</button>
+              <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+          </form>
+
+        </div>
+        <div class="col-lg-2"></div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+
+              <li class="breadcrumb-item active" aria-current="page" id="result"></li>
+
+            </ol>
+          </nav>
+        </div>
+
+        <div class="col-lg-2"></div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+          <ul class="list-group" id="display">
+            
+          </ul>
+        </div>
+        <div class="col-lg-2"></div>
+      </div>
+
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <script>
+      $(document).ready(()=>{
+        const display = $("#display");
+        const form = $("#form");
+        const operationInput = $("#operationInput");
+        const resultView = $("#result")
+        
+        var tagToShow = "Operation = Result";
+        resultView.html(tagToShow);
+
+        const all = ()=>{
+          fetch('/all',{
+            method: "get"
+          }).then((response)=>{
+            return response.json();
+          }).then((data)=>{
+            console.log(data);
+            displayOperations(data);
+          });
+        }
+
+
+        all();
+
+        const resetOperationsInput = () =>{
+          operationInput.val('');
+        }
+
+        const deleteOperation = (operation,listItemID,deleteID)=>{
+          let deleteBtn = $(`#${deleteID}`);
+          deleteBtn.click(()=>{
+            fetch(`/${operation._id}`,{
+              method: "delete"
+            }).then((response)=>{
+              return response.json();
+            }).then((data)=>{
+              if(data.ok == 1){
+                $(`#${listItemID}`).remove();
+              }
+            });
+          });
+        }
+
+        const editOperation = (operation,operationID,editID)=>{
+          let editBtn = $(`#${editID}`);
+          editBtn.click(()=>{
+            fetch(`/${operation._id}`,{
+              method : "put",
+              headers : {
+                "Content-Type" : "application/json; charset=utf-8" 
+              },
+              body : JSON.stringify({ input : operationInput.val()})
+            }).then((response)=>{
+              return response.json();
+            }).then((data)=>{
+              if(data.ok == 1){
+                let operationIndex = $(`#${operationID}`);
+                operationIndex.html(data.value.input + " = " + data.value.output);
+                resetOperationsInput();
+              }
+            });
+          });
+        }
+
+        const solve = ()=>{
+          let solveBtn = $(`#solveReq`);
+          solveBtn.click(()=>{
+            fetch('/solve',{
+              method : 'post',
+              headers : {
+                "Content-Type" : "application/json; charset=utf-8" 
+              },
+              body : JSON.stringify({input: operationInput.val()})
+            }).then((response)=>{
+              console.log("valor 0");
+              return response.json();
+            }).then((data)=>{
+              console.log("valor 1");
+              console.log(data);
+              if(data.ok == 1){ //ver!
+                resultView.html(`${data.input} = ${data.output}`);
+              }
+              resetOperationsInput();
+            });
+
+          });
+        }
+
+        // generate ids to the views?
+        const buildIDS = (operation) =>{
+          return { 
+            editID : "edit_" + operation._id,
+            deleteID : "delete_" + operation._id,
+            listItemID : "listItem_" + operation._id,
+            operationID : "operation_" + operation._id
+          }
+        }
+
+        // build template to show the list of operations saved
+        const buildTemplate = (operation, ids) =>{
+          return `<li class="list-group-item" id="${ids.listItemID}">
+                    <div class="row">
+                      <div class="col-md-4" id="${ids.operationID}">${operation.input} = ${operation.output} </div>
+                      <div class="col-md-4"></div>
+                      <div class="col-md-4 text-right">
+                        <button type="button" class="btn btn-secondary" id="${ids.editID}">Edit</button>
+                        <button type="button" class="btn btn-danger" id="${ids.deleteID}">Delete</button>
+                      </div>
+                    </div>
+                  </li>`;
+        }
+
+        //
+        const displayOperations = (data) =>{
+          solve();
+          data.forEach((operation)=>{
+            let ids = buildIDS(operation);
+            display.append(buildTemplate(operation,ids));
+            editOperation(operation,ids.operationID,ids.editID);
+            deleteOperation(operation,ids.listItemID,ids.deleteID);
+          });
+        }
+
+        form.submit((e)=>{
+          e.preventDefault();
+          fetch('/',{
+            method : 'post',
+            body : JSON.stringify({input: operationInput.val()}),
+            headers : {
+              "Content-Type" : "application/json; charset=utf-8"
+            }
+          }).then((response)=>{
+            return response.json();
+          }).then((data)=>{
+            if(data.result.ok == 1 && data.result.n == 1){
+              let ids = buildIDS(data.document);
+              display.append(buildTemplate(data.document,ids));
+              editOperation(data.document,ids.operationID,ids.editID);
+              deleteOperation(data.document,ids.listItemID,ids.deleteID);
+            }
+             resetOperationsInput();
+          });
+        })
+      });
+
+    </script>
+  </body>
+</html>
