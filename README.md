@@ -29,6 +29,20 @@ El motor de cálculo de esta aplicación tendría que estar en un servidor Node.
 
 This project has a file that handle the server ```server.js```, another to manage a db conection ```database.js``` and finally ```index.html``` a file with a tiny page to use all the functions writen in the first file.
 
+## Tools & Tecnologies
+
+I used [Express], a [Node.js] web aplication framework, to develop the server.
+
+[Mongo DB] to store the data.
+
+[Bootstrap] to decorate the Front-End
+
+[Express]: https://expressjs.com/
+[Node.js]: https://nodejs.org/
+[Mongo DB]: https://www.mongodb.com/
+[Bootstrap]: https://getbootstrap.com/
+
+In the Front-End to 
 ## Help to install the packages
 ```npm install```
 
@@ -36,20 +50,20 @@ This project has a file that handle the server ```server.js```, another to manag
 
 To init the database run the following command: 
 
-```$mongo```
+```mongo```
 
 // inside mongo must to connect to the databaserun the following command in the db-client:
 
-```$use CalculatorDB```
+```use CalculatorDB```
 
 // to find all the elements on the database run:
 
-```$db.operations.find({}) ```
+```db.operations.find({}) ```
 
 ## Help to init the server.
 
 To start the application run :
-```$node server```
+```node server```
 
 # API
 
