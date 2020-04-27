@@ -1,4 +1,4 @@
-#EJERCICIO:
+# EJERCICIO:
 1) Escribir una calculadora simple con las siguientes funcionalidades:
    La calculadora debe soportar:
    suma,
@@ -8,7 +8,7 @@
 2) Se tiene que poder persistir una sesión de cálculo
 3) Se tiene que poder recuperar una sesión de cálculo almacenada.
 
-#Ejemplo:
+# Ejemplo:
 input: 2+2
 output: 4
 
@@ -23,7 +23,7 @@ output: 2+2 = 4
 
 El motor de cálculo de esta aplicación tendría que estar en un servidor Node.js / PHP/ JAVA / Ruby or Rails, con una base de persistencia en Mongo, MySQL, MSSQL, PSQL y su interfaz tendría que ser REST (en lo posible).
 
-#Problem Solution
+# Problem Solution
 
 This project has a file that handle the server ```server.js```, another to manage a db conection ```database.js``` and finally ```index.html``` a file with a tiny page to use all the functions writen in the first file.
 
@@ -44,12 +44,12 @@ To init the database run the following command:
 To start the application run :
 ```$node server```
 
-##API
+## API
 
-#Method: GET "/"
+# Method: GET "/"
 Return the init page
 
-#Method: GET "/all"
+# Method: GET "/all"
 Find all the stored operations in JSON format:
 
 {
@@ -58,25 +58,25 @@ Find all the stored operations in JSON format:
 	output:
 }
 
-#Method: POST "/"
+# Method: POST "/"
 Insert an Operation in the database.
 Body parameters expected:
 {
 	input:
 }
 
-#Method: GET "/:id"
+# Method: GET "/:id"
 Find operation in database
 
 
-#Method: PUT "/:id"
+# Method: PUT "/:id"
 Update an operation 
 Body parameters expected:
 {
 	input
 }
 
-#Method: DELETE "/:id"
+# Method: DELETE "/:id"
 Delete an operation
 
 
